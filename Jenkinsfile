@@ -1,16 +1,31 @@
 pipeline {
-    agent any 
+    agent any
+
     stages {
-        stage('Stage 1') {
+
+        // Normal Stages
+
+        stage ('success'){
             steps {
-                echo 'Hello world!' 
+                script {
+                    currentBuild.result = 'SUCCESS'
+                }
             }
-            always {
-                step([$class: 'Mailer',
+        }
+    }
+
+    post {
+        failure {
+            script {
+                currentBuild.result = 'FAILURE'
+            }
+        }
+
+        always {
+            step([$class: 'Mailer',
                 notifyEveryUnstableBuild: true,
                 recipients: "teddy.mengistu@paradyme.us",
                 sendToIndividuals: true])
-        }
         }
     }
 }
