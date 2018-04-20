@@ -1,31 +1,19 @@
 pipeline {
-    agent any
-
+    agent any 
     stages {
-
-        // Normal Stages
-
-        stage ('success'){
+        stage('Stage 1') {
             steps {
-                script {
-                    currentBuild.result = 'SUCCESS'
+                echo 'Hello world!' 
+
+            }
+        }
+        stage('Build'){
+            steps {
+                withMaven(maven: 'mvn-3.5.2'){
+                    sh 'mvn clean package'
                 }
             }
         }
     }
-
-    post {
-        failure {
-            script {
-                currentBuild.result = 'FAILURE'
-            }
-        }
-
-        always {
-            step([$class: 'Mailer',
-                notifyEveryUnstableBuild: true,
-                recipients: "teddy.mengistu@paradyme.us",
-                sendToIndividuals: true])
-        }
-    }
 }
+
