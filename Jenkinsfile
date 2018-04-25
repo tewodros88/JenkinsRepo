@@ -7,13 +7,19 @@ pipeline {
 
             }
         }
-        stage('Build'){
-            steps {
-                withMaven(maven: 'mvn-3.5.2'){
-                    sh 'mvn clean package'
-                }
-            }
-        }
     }
 }
-
+post {
+    failure {
+        mail to: 'teddy.Mengistu@paradyme.us',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
+    }
+}
+post {
+    successful {
+        mail to: 'teddy.Mengistu@paradyme.us',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
+    }
+}
