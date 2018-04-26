@@ -1,25 +1,15 @@
 pipeline {
-    agent any 
-    stages {
-        stage('Stage 1') {
-            steps {
-                echo 'Hello world!' 
-
-            }
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
         }
     }
-}
-post {
-    failure {
-        mail to: 'teddy.Mengistu@paradyme.us',
-             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-             body: "Something is wrong with ${env.BUILD_URL}"
-    }
-}
-post {
-    successful {
-        mail to: 'teddy.Mengistu@paradyme.us',
-             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-             body: "Something is wrong with ${env.BUILD_URL}"
+    stages {
+        stage('Build') { 
+            steps {
+                sh 'mvn -B -DskipTests clean package' 
+            }
+        }
     }
 }
