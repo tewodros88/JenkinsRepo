@@ -18,5 +18,10 @@ mvn clean'''
         sh 'mvn -Dmaven.test.failure.ignore=true install'
       }
     }
+    stage('Email') {
+      steps {
+        emailext(subject: 'Jenkins', body: 'Email notif', attachLog: true, from: 'Teddy')
+      }
+    }
   }
 }
